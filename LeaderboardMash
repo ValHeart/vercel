@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceMash Classmates Edition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .leaderboard {
+            margin-top: 20px;
+        }
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .leaderboard th, .leaderboard td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        /* Red line above students with 0% votes */
+        .zero-votes {
+            border-top: 3px solid red;
+        }
+        .vote-btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .vote-btn:hover {
+            background: #218838;
+        }
+        .top-3 {
+             border-top: 5px solid green;
+}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>FaceMash Classmates Edition</h1>
+        <p>Vote for the most stylish and best-looking students in my classmates!</p>
+
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <table>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Vote</th>
+                </tr>
+                 <!-- GREEN LINE SEPARATOR -->
+                <tr>
+                    <td>1</td>
+                    <td>Nodira Teacher</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Solixova Adolatbonu</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Riskulova Sevinch</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Raimjonova Maftuna</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Raximbayeva Sarvinoz</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Ahmadova Dilnoza</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Dusumxodjaeva Mehribon</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Raximdjonova Omina</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Salimdjonova Shaxzoda</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Abduvaleyiva Nigina</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Alimova Zuhra</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Ahmadkulova Xurshida</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>Mirobidova Maftuna</td>
+                    <td>0</td>
+                </tr>
+                <!-- RED LINE SEPARATOR -->
+                <tr class="zero-votes">
+                    <td>14</td>
+                    <td>Farxodova Muxlisa</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>Isroilova Dilyora</td>
+                    <td>0</td>
+                </tr>
+
+                        
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // Load votes from localStorage or initialize
+        let votes = JSON.parse(localStorage.getItem("votes")) || {
+            "Nodira Teacher": 0,
+            "Solixova Adolatbonu": 1,
+            "Riskulova Sevinch": 0,
+            "Raimjonova Maftuna": 0,
+            "Raximbayeva Sarvinoz": 0,
+            "Ahmadova Dilnoza": 0,
+            "Dusumxodjaeva Mehribon": 0,
+            "Raximdjonova Omina": 0,
+            "Salimdjonova Shaxzoda": 0,
+            "Abduvaleyiva Nigina": 0,
+            "Alimova Zuhra": 0,
+            "Ahmadkulova Xurshida": 0,
+            "Mirobidova Maftuna": 0,
+            "Farxodova Muxlisa": 0,
+            "Isroilova Dilyora": 0
+        };
+    
+        function vote() {
+            let name = prompt("Enter the name of the student you want to vote for:");
+    
+            if (votes.hasOwnProperty(name)) {
+                votes[name] += 1;
+                localStorage.setItem("votes", JSON.stringify(votes)); // Save votes
+                updateLeaderboard();
+                alert(`You voted for ${name}!`);
+            } else {
+                alert("Invalid name. Please enter a correct name from the leaderboard.");
+            }
+        }
+    
+        function updateLeaderboard() {
+            let table = document.querySelector(".leaderboard table");
+            let rows = "";
+    
+            let sortedVotes = Object.entries(votes).sort((a, b) => b[1] - a[1]);
+    
+            sortedVotes.forEach((entry, index) => {
+                rows += `
+                    <tr class="${index < 3 ? 'top-3' : ''}">
+                        <td>${index + 1}</td>
+                        <td>${entry[0]}</td>
+                        <td>${entry[1]}</td>
+                    </tr>
+                `;
+            });
+    
+            table.innerHTML = `
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Votes</th>
+                </tr>
+                ${rows}
+            `;
+        }
+    
+        updateLeaderboard(); // Initial update on load
+    </script>    
+    
+    <button class="vote-btn" onclick="vote()">Vote Now</button>
+
+</body>
+</html>
